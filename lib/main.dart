@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:mi_card/services/calls_and_messages_service.dart';
 import 'package:mi_card/services/services_locator.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 void main() {
   setupLocator();
-  runApp(MyApp());
+  // Lock the screen to vertical mode
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]).then((_) {
+    runApp(MyApp());
+  });
 }
 
 _launchURL(String url) async {
@@ -18,9 +23,12 @@ _launchURL(String url) async {
 
 class MyApp extends StatelessWidget {
   final CallsAndMessagesService _callsAndMessagesService = locator<CallsAndMessagesService>();
+
   final String phone = '+33 1 23 45 67 89';
   final String email = 'avatar@gmail.com';
   final String stackOverflow = 'https://stackoverflow.com/users/';
+  final String gitHub = 'https://github.com';
+  final String linkedIn = 'https://www.linkedin.com/';
 
   @override
   Widget build(BuildContext context) {
@@ -95,6 +103,14 @@ class MyApp extends StatelessWidget {
                 onTap: () => _callsAndMessagesService.sendEmail(email),
               ),
             ),
+            SizedBox(
+              height: 20,
+              width: 150,
+              child: Divider(
+                color: Colors.white,
+                thickness: 0.5,
+              ),
+            ),
             Card(
               margin: EdgeInsets.symmetric(vertical: 10, horizontal: 25),
               child: ListTile(
@@ -109,7 +125,37 @@ class MyApp extends StatelessWidget {
                 ),
                 onTap: () => _launchURL(stackOverflow),
               ),
-            )
+            ),
+            Card(
+              margin: EdgeInsets.symmetric(vertical: 10, horizontal: 25),
+              child: ListTile(
+                leading: Image(
+                  image: AssetImage('images/github.png'),
+                  width: 25,
+                  height: 25,
+                ),
+                title: Text(
+                  'My GitHub Profile',
+                  style: TextStyle(fontFamily: 'SourceSansPro', fontSize: 15),
+                ),
+                onTap: () => _launchURL(gitHub),
+              ),
+            ),
+            Card(
+              margin: EdgeInsets.symmetric(vertical: 10, horizontal: 25),
+              child: ListTile(
+                leading: Image(
+                  image: AssetImage('images/linkedin.png'),
+                  width: 25,
+                  height: 25,
+                ),
+                title: Text(
+                  'My LinkedIn Profile',
+                  style: TextStyle(fontFamily: 'SourceSansPro', fontSize: 15),
+                ),
+                onTap: () => _launchURL(linkedIn),
+              ),
+            ),
           ],
         )),
       ),
